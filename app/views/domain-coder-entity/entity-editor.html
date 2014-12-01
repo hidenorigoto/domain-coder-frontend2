@@ -1,0 +1,71 @@
+<h1>エンティティ：{{ current.name }}</h1>
+
+<form>
+    <tabset justified="true">
+        <tab heading="概要">
+            <table class="table">
+                <tr>
+                    <th>名前</th>
+                    <td><input type="text" ng-model="current.name" class="form-control" placeholder="名前" focus-on="data.select.after"/></td>
+                    <th>タイプ</th>
+                    <td>
+                        <select ng-model="current.type" ng-options="type.type as type.label for type in entityTypes"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>説明</th>
+                    <td colspan="3">
+                        <textarea ng-model="current.description" class="form-control" placeholder="説明" style="height: 100px;"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </tab>
+        <tab heading="DB定義">
+            <table class="table">
+                <tr>
+                    <th>テーブル名</th>
+                    <td><input type="text" ng-model="current.dbName" class="form-control" placeholder="データベース テーブル名"/></td>
+                </tr>
+            </table>
+
+            <div ng-controller="EntityEditor_FieldsCtrl">
+                <div class="row">
+                <div class="col-md-12 text-right">
+                    <button ng-click="fieldAdd()" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="add new field"></span>
+                    </button>
+                </div>
+                </div>
+                <div class="row">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>名前</th>
+                                <th>種類</th>
+                                <th>主キー</th>
+                                <th>NOT NULL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="field in current.fields">
+                                <th></th>
+                                <td><input type="text" class="form-control" ng-model="field.name"></td>
+                                <td><select class="form-control" ng-model="field.type" ng-options="type.type as type.label for type in dataTypes" ng-options=""></select></td>
+                                <td><input type="checkbox" ng-model="field.primary" class="form-control"></td>
+                                <td><input type="checkbox" ng-model="field.notNull" class="form-control"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            フィールドや関連を定義する。
+        </tab>
+        <tab heading="ストーリー">
+            このエンティティの内容を確定するに至ったストーリーをメモしていく。
+            テキスト以外に写真や音声などのマルチメディアファイル、リンクなどを記録できる。
+        </tab>
+    </tabset>
+
+</form>

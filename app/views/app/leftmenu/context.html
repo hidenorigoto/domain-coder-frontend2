@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="leftmenu-header2">コンテキスト</div>
+    </div>
+    <div class="col-md-4 text-right">
+        <button raise-event="context.add.request" event-arg="" class="btn btn-default btn-xs">
+            <span class="glyphicon glyphicon-plus" aria-hidden="add new context"></span>
+        </button>
+    </div>
+</div>
+<ul>
+<li ng-repeat="context in ContextCollection"><a ui-sref="context({contextId: context.id})">{{ context.name }}</a>
+    <ul>
+        <li><a ui-sref="context-entity({contextId: context.id})">エンティティ</a></li>
+        <li>ユースケース</li>
+        <li>概念帳票</li>
+    </ul>
+</li>
+</ul>

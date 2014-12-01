@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h3 class="modal-title">「{{currentContext.name}}」のエンティティ追加</h3>
+</div>
+<div class="modal-body">
+    新規：
+    <input type="name" class="form-control" ng-model="name" ng-model-options="{ debounce: 500 }" focus-on="">
+    既存エンティティ：
+    <select ng-model="existingEntity" ng-options="entity.name for entity in EntityCollection"></select>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>
