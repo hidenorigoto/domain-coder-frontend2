@@ -1,5 +1,7 @@
-<h1>エンティティ：{{ current.name }}</h1>
+<h1 ng-if="inSingleMode">エンティティ：{{ current.name }}</h1>
+<h3 ng-if="!inSingleMode">エンティティ：{{ current.name }}</h3>
 
+<div class="col-md-12">
 <form>
     <tabset justified="true">
         <tab heading="概要">
@@ -28,38 +30,81 @@
                 </tr>
             </table>
 
+            <div ng-controller="EntityEditor_RelationsCtrl">
+                <div class="col-md-12 text-right">
+                    <button ng-click="relationAdd()" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="add new relation"></span>
+                    </button>
+                </div>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th rowspan="2">リレーションNo</th>
+                        <th>from</th>
+                        <th colspan="2">to</th>
+                        <th rowspan="2">操作</th>
+                    </tr>
+                    <tr>
+                        <th>１／多</th>
+                        <th>１／多</th>
+                        <th>対象</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="relationView in current.relationViews" ng-controller="EntityEditor_RelationCtrl">
+                        <td>0</td>
+                        <td>
+                            <select ng-model="relationView.from.cardinalityObject.isMany" ng-options="om.value as om.label for om in oneOrMany"></select>
+                        </td>
+                        <td>
+                            <select ng-model="relationView.to.cardinalityObject.isMany" ng-options="om.value as om.label for om in oneOrMany"></select>
+                        </td>
+                        <td><select ng-model="relationView.to.entityObject" ng-options="entity.name for entity in targetEntities"></select></td>
+                        <td>
+                            <button ng-click="relationRemove(relationView)" class="btn btn-default btn-xs">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="remove relation"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div ng-controller="EntityEditor_FieldsCtrl">
-                <div class="row">
                 <div class="col-md-12 text-right">
                     <button ng-click="fieldAdd()" class="btn btn-default btn-xs">
                         <span class="glyphicon glyphicon-plus" aria-hidden="add new field"></span>
                     </button>
                 </div>
-                </div>
-                <div class="row">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>名前</th>
-                                <th>種類</th>
-                                <th>主キー</th>
-                                <th>NOT NULL</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="field in current.fields">
-                                <th></th>
-                                <td><input type="text" class="form-control" ng-model="field.name"></td>
-                                <td><select class="form-control" ng-model="field.type" ng-options="type.type as type.label for type in dataTypes" ng-options=""></select></td>
-                                <td><input type="checkbox" ng-model="field.primary" class="form-control"></td>
-                                <td><input type="checkbox" ng-model="field.notNull" class="form-control"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>フィールドNo</th>
+                            <th>名前</th>
+                            <th>種類</th>
+                            <th>主キー</th>
+                            <th>NOT NULL</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="field in current.fields" ng-controller="EntityEditor_FieldCtrl">
+                            <th></th>
+                            <td><input type="text" class="form-control" ng-model="field.name"></td>
+                            <td><select class="form-control" ng-model="field.type" ng-options="type.type as type.label for type in dataTypes"></select></td>
+                            <td><input type="checkbox" ng-model="field.primary" class="form-control"></td>
+                            <td><input type="checkbox" ng-model="field.notNull" class="form-control"></td>
+                            <td>
+                                <button ng-click="fieldRemove(field)" class="btn btn-default btn-xs">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="remove field"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+
             フィールドや関連を定義する。
         </tab>
         <tab heading="ストーリー">
@@ -69,3 +114,16 @@
     </tabset>
 
 </form>
+</div>
+
+<div ng-if="inSingleMode">
+<h3>参照コンテキスト</h3>
+<table>
+    <tr ng-repeat="targetContextId in current.refs.contextId" ng-init="context = ContextCollection.get(targetContextId)">
+        <td>{{context.name}}</td>
+        <td>
+            <a class="btn btn-default" ui-sref="context({contextId: context.id})">編集</a>
+        </td>
+    </tr>
+</table>
+</div>

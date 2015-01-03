@@ -1,7 +1,7 @@
 (function (exports) {
 'use strict';
 
-var module = angular.module('DomainCoder.ng.ContextEditor', ['DomainCoder.Core', 'DomainCoder.ng.ui', 'ui.grid.selection'])
+var module = angular.module('DomainCoder.ng.ContextEditor', ['DomainCoder.Core', 'DomainCoder.ng.ui'])
 .config(function () {
 });
 

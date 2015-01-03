@@ -22,16 +22,6 @@ module.controller('DomainCoderUiCtrl', [
     '$log',
 function($scope, $rootScope, AppContext, $log) {
 
-    $scope.$on('data.new', function(ev) {
-        //$rootScope.$broadcast('entity.select', entity);
-    });
-
-    $scope.$on('field.new', function(ev) {
-        //$rootScope.$broadcast('field.select', field);
-    });
-
-    $scope.show = function(ev) {
-    };
 }]);
 
 })(this);

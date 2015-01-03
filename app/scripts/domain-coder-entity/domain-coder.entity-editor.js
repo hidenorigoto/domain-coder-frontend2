@@ -46,7 +46,13 @@ var DomainCoder = exports.DomainCoder || {};
                 this.$state.go('home');
             }
         }
-    }
+    };
+
+    Object.defineProperty(EntityEditor.Context.prototype, 'inSingleMode', {
+        get: function () {
+            return this.$state.current.name === 'entity';
+        }
+    });
 
 })(DomainCoder.EntityEditor = DomainCoder.EntityEditor || {});
 
@@ -78,15 +84,19 @@ module.controller('EntityEditor_MainCtrl', [
     '$scope',
     '$rootScope',
     'EntityEditor_Context',
+    'dcore_ContextCollection',
     '$timeout',
     '$log',
-function($scope, $rootScope, Context, $timeout, $log) {
+function($scope, $rootScope, EditorContext, ContextCollection, $timeout, $log) {
     if (angular.isDefined($scope.EditorContext)) {
-        Context.current = $scope.EditorContext.selectedEntity;
+        EditorContext.current = $scope.EditorContext.selectedEntity;
     } else {
-        Context.initialize();
+        EditorContext.initialize();
     }
-    $scope.current = Context.current;
+    $scope.inSingleMode = EditorContext.inSingleMode;
+
+    $scope.current = EditorContext.current;
+    $scope.ContextCollection = ContextCollection;
 
     $scope.entityTypes = [
         {type:'normal', label:''},
@@ -95,8 +105,8 @@ function($scope, $rootScope, Context, $timeout, $log) {
     ];
 
     $scope.$on('change.entity', function(event, entity) {
-        Context.current = entity;
-        $scope.current = Context.current;
+        EditorContext.current = entity;
+        $scope.current = EditorContext.current;
         $scope.$apply();
     });
 
@@ -116,8 +126,26 @@ module.controller('EntityEditor_FieldsCtrl', [
 function($scope, $rootScope, $log) {
     $scope.fields = $scope.current.fields;
 
+    $scope.fieldAdd = function() {
+        $scope.$emit('entity.field.add.request', $scope.current);
+    };
+
+    $scope.$watchCollection('fields', function(newVal) {
+        $scope.$emit('entity.update', $scope.current);
+    });
+}]);
+
+/**
+ * EntityEditor_FieldCtrl
+ * 個々のフィールド
+ */
+module.controller('EntityEditor_FieldCtrl', [
+    '$scope',
+    '$rootScope',
+    '$log',
+function($scope, $rootScope, $log) {
+
     $scope.dataTypes = [
-        {type:'reference', label:'参照'},
         {type:'string', label:'文字列 (string)'},
         {type:'int', label:'整数 (int)'},
         {type:'date', label:'日付 (date)'},
@@ -131,11 +159,74 @@ function($scope, $rootScope, $log) {
         {type:'blob', label:'blob'}
     ];
 
-    $scope.fieldAdd = function() {
-        $scope.$emit('entity.field.add.request', $scope.current);
+    $scope.fieldRemove = function(fieldObject) {
+        $scope.$emit('entity.field.remove.request', {entity:$scope.current, field:fieldObject});
     };
+
+    $scope.$watch('field.name', function(newVal) {
+        $scope.$emit('entity.update', $scope.current);
+    });
+    $scope.$watch('field.primary', function(newVal) {
+        $scope.$emit('entity.update', $scope.current);
+    });
+    $scope.$watch('field.notNull', function(newVal) {
+        $scope.$emit('entity.update', $scope.current);
+    });
+}]);
+
+/**
+ * EntityEditor/RelationsCtrl
+ * リレーション一覧
+ */
+module.controller('EntityEditor_RelationsCtrl', [
+    '$scope',
+    '$rootScope',
+    '$log',
+function($scope, $rootScope, $log) {
+    //$scope.relations = $scope.current.relations;
+
+    $scope.relationAdd = function() {
+        $scope.$emit('entity.relation.add.request', $scope.current);
+    };
+
+    /*
+    $scope.$watchCollection('relations', function(newVal) {
+        $scope.$emit('entity.update', $scope.current);
+    });
+    */
+}]);
+
+/**
+ * EntityEditor_RelationCtrl
+ * 個々のリレーション
+ */
+module.controller('EntityEditor_RelationCtrl', [
+    '$scope',
+    '$rootScope',
+    'emodel_EntityCollection',
+    '$log',
+function($scope, $rootScope, EntityCollection, $log) {
+    $scope.targetEntities = EntityCollection;
+    $scope.oneOrMany = [
+        {label: '１', value: false},
+        {label: '多', value: true}
+    ];
+
+    $scope.relationRemove = function(relationViewObject) {
+        $scope.$emit('entity.relation.remove.request', {relation:relationViewObject.model});
+    };
+
+    $scope.$watch('relationView.to.entityObject', function(newVal) {
+        $scope.$emit('relation.update', $scope.relationView);
+    });
+    $scope.$watch('relationView.to.cardinalityObject.isMany', function(newVal) {
+        $scope.$emit('relation.update', $scope.relationView);
+    });
+    $scope.$watch('relationView.from.cardinalityObject.isMany', function(newVal) {
+        $scope.$emit('relation.update', $scope.relationView);
+    });
 }]);
 
 
-exports.DomainCoder = DomainCoder;
+    exports.DomainCoder = DomainCoder;
 })(this);

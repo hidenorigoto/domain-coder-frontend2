@@ -11,13 +11,16 @@
  */
 var module = angular.module('DomainCoder.App', [
     'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch',
-    'ui.router', 'ui.grid', 'ui.grid.selection', 'ui.grid.edit', 'ui.bootstrap',
+    'ui.router', 'ui.grid', 'ui.grid.selection', 'ui.grid.edit', 'ui.bootstrap','ui.tree',
 
     // Domain Coder
     'DomainCoder.Core', 'DomainCoder.ng.ui', 'DomainCoder.App.Main', 'DomainCoder.App.Menu',
     'DomainCoder.ng.ContextEditor',
+    'DomainCoder.Project',
     // Domain Coder Entity Model
     'DomainCoder.Model.Entity', 'DomainCoder.ng.EntityEditor', 'DomainCoder.ng.ContextEntityEditor',
+    // Domain Coder Conceptual Form
+    'ConceptualForm.Core', 'ConceptualForm.Mapper', 'DomainCoder.ng.ConceptualFormEditor',
     // other lib
     'uuid4', 'phpmentors.directives'
 ]);
@@ -53,20 +56,12 @@ function ($stateProvider, $urlRouterProvider) {
             templateUrl:  'views/domain-coder-entity/entity-editor.html',
             controller: 'EntityEditor_MainCtrl'
         })
+        .state('context-conceptual-form', {
+            url: '/context/{contextId}/conceptual-form',
+            templateUrl:  'views/domain-coder-conceptual-form/editor.html',
+            controller: 'ConceptualFormEditor_MainCtrl'
+        })
     ;
 }]);
 
 })();
-
-var dragmove = function(dx,dy) {
-    this.attr({
-        transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]
-    });
-}
-
-var dragstart = function() {
-    this.data('origTransform', this.transform().local );
-}
-var dragstop = function() {
-    //console.log('finished dragging');
-}

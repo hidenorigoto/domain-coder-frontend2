@@ -12,3 +12,13 @@ input:focus,textarea:focus {
 :-moz-placeholder {
     color:    #6Ca !important;;
 }
+
+
+.navbar-brand {
+    color: #fff !important;
+}
+.project-name {
+    margin-left: 120px;
+    color: #fff !important;
+    font-size: 18px;
+}

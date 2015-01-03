@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -19,7 +20,7 @@
 </head>
 <body ng-app="DomainCoder.App">
 
-    <div ng-include="'views/app/main.html'" ng-controller="MainCtrl" ng-model-options="{ updateOn: 'default blur', debounce: {default: 500, blur: 0} }"></div>
+    <div ng-include="'views/app/main.html'" ng-controller="MainCtrl" ng-model-options="{ updateOn: 'default blur', debounce: {default: 100, blur: 0} }"></div>
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
@@ -45,20 +46,27 @@
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/Snap.svg/dist/snap.svg-min.js"></script>
+    <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/functions.js"></script>
     <script src="scripts/domain-coder/domain-coder.core.js"></script>
+    <script src="scripts/domain-coder/domain-coder.project.js"></script>
     <script src="scripts/domain-coder/domain-coder.context-editor.js"></script>
     <script src="scripts/domain-coder/domain-coder.ui.js"></script>
     <script src="scripts/domain-coder-entity/domain-coder.model.entity.js"></script>
     <script src="scripts/domain-coder-entity/domain-coder.entity-editor.js"></script>
     <script src="scripts/domain-coder-entity/domain-coder.context-entity-editor.js"></script>
     <script src="scripts/domain-coder-entity/domain-coder.diagram.entity.js"></script>
+    <script src="scripts/domain-coder-conceptual-form/domain-coder.conceptual-form-editor.js"></script>
+    <script src="scripts/conceptual-form/conceptual-form.js"></script>
+    <script src="scripts/conceptual-form/conceptual-form.mapper.js"></script>
     <script src="scripts/app/main.js"></script>
     <script src="scripts/app/menu.js"></script>
     <script src="scripts/directive/phpmentors-directives.js"></script>
+    <script src="scripts/snapsvg/plugins.js"></script>
     <script src="scripts/bootstrap.js"></script>
     <!-- endbuild -->
 </body>

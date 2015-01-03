@@ -38,27 +38,53 @@ DomainCoder.Model = DomainCoder.Model || {};
      * @constructor
      */
     Core.Context = function(id, name) {
+        /** @type {string} */
         this.id = id;
+        /** @type {string} */
         this.name = name;
+        /** @type {string} */
         this.description = '';
+        /** @type {string} */
+        this.purpose = '';
 
+        /** @type {Object} */
         this.refs = {
+            /** @type {Array} of {DomainCoder.Model.Entity.Entity} */
             entity: []
         };
 
+        /** @type {Object} */
         this.diagrams = {
-            entity: []
+            /** @type {Array} */
+            entity: [],
+            /** @type {string} */
+            entityMemo: ''
         };
     };
 
+    /**
+     * @param {DomainCoder.Core.Context} target
+     * @returns {boolean}
+     */
     Core.Context.prototype.equals = function(target) {
         return this.id === target.id;
     };
-    Core.Context.prototype.registerEntity = function(entity) {
-        this.refs.entity.push(entity);
+    /**
+     * @param {DomainCoder.Model.Entity.Entity} entityObject
+     */
+    Core.Context.prototype.registerEntity = function(entityObject) {
+        if (!angular.isDefined(entityObject)) return;
+        entityObject.refs.contextId.push(this.id);
+        this.refs.entity.push(entityObject);
     };
-    Core.Context.prototype.hasEntity = function(entity) {
-        return angular.isDefined(_.find(this.refs.entity, {'id': entity.id}));
+    /**
+     * @param {DomainCoder.Model.Entity.Entity} entityObject
+     * @returns {boolean}
+     */
+    Core.Context.prototype.hasEntity = function(entityObject) {
+        if (entityObject === undefined) return false;
+        if (entityObject === null) return false;
+        return angular.isDefined(_.find(this.refs.entity, {'id': entityObject.id}));
     };
 
 
@@ -73,13 +99,17 @@ DomainCoder.Model = DomainCoder.Model || {};
         this._uuid4 = uuid4;
         this._ContextCollection = ContextCollection;
     };
+    /**
+     * @param {string} name
+     * @returns {DomainCoder.Core.Context}
+     */
     Core.ContextFactory.prototype.create = function (name) {
         // angular 依存
         if (!angular.isDefined(name)) {
             name = '新規コンテキスト';
         }
         var context = new DomainCoder.Core.Context(this._uuid4.generate(), name);
-        this._ContextCollection.push(context);
+        this._ContextCollection.add(context);
 
         return context;
     };
@@ -90,9 +120,16 @@ DomainCoder.Model = DomainCoder.Model || {};
      * @constructor
      */
     Core.ContextCollection = function() {};
-    Core.ContextCollection.prototype = new Array;
+    Core.ContextCollection.prototype.add = function(context) {
+        this[context.id] = context;
+    };
+
+    /**
+     * @param {string} id
+     * @returns {DomainCoder.Core.Context}
+     */
     Core.ContextCollection.prototype.get = function(id) {
-        return _.find(this, {'id': id});
+        return this[id];
     };
 
 })(DomainCoder.Core = DomainCoder.Core || {});

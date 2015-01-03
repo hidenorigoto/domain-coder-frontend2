@@ -1,0 +1,33 @@
+<h1>コンテキスト：<a ui-sref="context({contextId: currentContext.id})">{{ currentContext.name }}</a>：概念帳票</h1>
+
+<div class="row">
+    <div class="col-md-12">
+
+        パス歩行行列
+        <table class="table table-bordered">
+            <tr>
+                <th></th>
+                <th class="text-center" ng-repeat="entity in matrix.entities">{{entity.name}}</th>
+            </tr>
+            <tr ng-repeat="entity in matrix.entities">
+                <th class="text-center">{{entity.name}}</th>
+                <td class="text-center" ng-repeat="entity2 in matrix.entities">
+                    {{matrix.getByEntity(entity2, entity).toString()}}
+                </td>
+            </tr>
+        </table>
+
+        概念帳票の候補
+        <div ng-repeat="entity in matrix.entities" ng-controller="ConceptualFormEditor_SubFormsCtrl">
+            <h2>起点: {{entity.name}} の帳票</h2>
+            <ul ng-if="error == false">
+                <li ng-repeat="formView in formViews">{{formView.toString()}}</li>
+            </ul>
+            <div ng-if="error == true">
+                <span ng-if="errorMessage == 'loop'">ループあり</span>
+                <span ng-if="errorMessage == 'divided'">離れ島あり</span>
+            </div>
+        </div>
+    </div>
+</div>
+
